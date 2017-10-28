@@ -2,20 +2,20 @@
 <html >
 <head>
 	<title>AzureLane Picker</title>
-	<h1>【碧藍航線 角色紀錄卡】</h1>
+	<h1>【アズールレーン / 全キャラリスト】</h1>
 </head>
 <link rel="stylesheet" type="text/css" href="./src/indexCSS.css">
 <body >	
 	<input type="file" id="selectedFile" onchange="loadJSONFile(event)">
-	<button onclick="saveJSONFile()">儲存檔案</button>	
-	<button>新增分類</button>	
+	<button onclick="saveJSONFile()">バックアップ / Save</button>	
+	<button>新規</button>	
 	<br><br>
 	<div id="lineView">
 		<div id="deafaultLine">
-			<text name="line1" contentEditable="true" style="font-size:20pt" size="15">預設行</text>
+			<text name="line1" contentEditable="true" style="font-size:20pt" size="15">第1艦隊</text>
 			<input type="color" value="#FFFFFF" onchange="ChangeBGColor(this.parentNode.id,this.value)"><br><br>
 			<svg id="deafaultLineSVG" width="1000" height="150">
-				<rect id="deafaultLineBG" width="1000" height="150" stroke="black" stroke-width="5pt" fill="#FFFFFF"/>
+				<rect id="deafaultLineBG" width="1000" height="150" stroke="black" stroke-width="5pt" fill="#FFFFFF" onclick="addCharacterMode(this.parentNode.id)"/>
 					<defs>
 				    <rect id="rect" x="50" y="25" width="100" height="100" rx="10"/>
 				    <clipPath id="clip">
@@ -27,25 +27,24 @@
 	</div>
 	<div id="selectView">
 		<div id="deafaultLine">
-			<h2 size="200">【艦娘一覽(選擇區)】</h2>
-			<text>【篩選:</text>
-			<select id="filterTag">
+			<h2 size="200">【全キャラ一覽(選擇區)】</h2>
+			<text>【艦種別キャラ一覧:</text>
+			<select id="filterTag" onchange="LoadSelectPicture()">
 				<option value="all">全部/ALL</option>			  
-				<option value="dd">驅逐/DD</option>
-				<option value="cl">輕巡/CL</option>
+				<option value="dd">駆逐/DD</option>
+				<option value="cl">軽巡/CL</option>
 				<option value="ca">重巡/CA</option>
-				<option value="bc">戰巡/BC</option>
-				<option value="bb">戰列/BB</option>
-				<option value="cvl">輕母/CVL</option>
-				<option value="cv">航母/CV</option>
+				<option value="bc">巡洋戦艦/BC</option>
+				<option value="bb">戦艦/BB</option>
+				<option value="cvl">軽空母/CVL</option>
+				<option value="cv">空母/CV</option>
 				<option value="bm">重砲/BM</option>
-				<option value="ar">維修/AR</option>			  
+				<option value="ar">工作/AR</option>			  
 			</select>
 			<text>】</text>
-			<button onclick="LoadSelectPicture()">刷新</button><br>
 			<text id = "ownText">
-			【持有數: / 】【持有率: %】
-			</text>
+			【全キャラ: 0 / 235 】【所有率: 0 %】
+			</text><br>
 			<svg id="selectViewSVG" width="1000" height="150">
 				<rect id="selectViewBG" width="1000" height="150" stroke="black" stroke-width="5pt" fill="#FFFFFF"/>
 			</svg>
