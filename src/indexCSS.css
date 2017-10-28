@@ -1,0 +1,10 @@
+.bg {
+    background-repeat: no-repeat;
+
+ 	height: 100%; 
+ 	background-size: cover;
+}
+
+img{
+	border-radius: 4px;
+}
