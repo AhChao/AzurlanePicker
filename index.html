@@ -6,8 +6,8 @@
 </head>
 <link rel="stylesheet" type="text/css" href="./src/indexCSS.css">
 <body >	
-	<button>儲存檔案</button>
-	<button>讀取檔案</button>
+	<input type="file" id="selectedFile" onchange="loadJSONFile(event)">
+	<button onclick="saveJSONFile()">儲存檔案</button>	
 	<button>新增分類</button>	
 	<br><br>
 	<div id="lineView">
@@ -29,7 +29,7 @@
 		<div id="deafaultLine">
 			<h2 size="200">【艦娘一覽(選擇區)】</h2>
 			<text>【篩選:</text>
-			<select>
+			<select id="filterTag">
 				<option value="all">全部/ALL</option>			  
 				<option value="dd">驅逐/DD</option>
 				<option value="cl">輕巡/CL</option>
@@ -42,8 +42,12 @@
 				<option value="ar">維修/AR</option>			  
 			</select>
 			<text>】</text>
-			<svg id="deafaultLineSVG" width="1000" height="200">
-				<rect id="deafaultLineBG" width="1000" height="200" stroke="black" stroke-width="5pt" fill="#FFFFFF"/>
+			<button onclick="LoadSelectPicture()">刷新</button><br>
+			<text id = "ownText">
+			【持有數: / 】【持有率: %】
+			</text>
+			<svg id="selectViewSVG" width="1000" height="150">
+				<rect id="selectViewBG" width="1000" height="150" stroke="black" stroke-width="5pt" fill="#FFFFFF"/>
 			</svg>
 		</div>
 	</div>
