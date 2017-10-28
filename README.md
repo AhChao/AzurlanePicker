@@ -12,4 +12,4 @@
 - 儲存等級與突破 , 耗油
 
 **網頁展示**
-- https://ahchao.github.io/RainbowPuzzle/
+- https://ahchao.github.io/AzurlanePicker/
