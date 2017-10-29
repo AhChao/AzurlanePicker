@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html >
+<html style="background-image: url(./img/htmlBackground.jpg)">
 <head>
 	<title>AzureLane Picker</title>
 	<h1>【アズールレーン / 全キャラリスト】</h1>
@@ -8,20 +8,14 @@
 <body >	
 	<input type="file" id="selectedFile" onchange="loadJSONFile(event)">
 	<button onclick="saveJSONFile()">バックアップ / Save</button>	
-	<button>新規</button>	
+	<button onclick="addNewLine()">新規</button>	
 	<br><br>
 	<div id="lineView">
 		<div id="deafaultLine">
 			<text name="line1" contentEditable="true" style="font-size:20pt" size="15">第1艦隊</text>
-			<input type="color" value="#FFFFFF" onchange="ChangeBGColor(this.parentNode.id,this.value)"><br><br>
-			<svg id="deafaultLineSVG" width="1000" height="150">
-				<rect id="deafaultLineBG" width="1000" height="150" stroke="black" stroke-width="5pt" fill="#FFFFFF" onclick="addCharacterMode(this.parentNode.id)"/>
-					<defs>
-				    <rect id="rect" x="50" y="25" width="100" height="100" rx="10"/>
-				    <clipPath id="clip">
-				      <use xlink:href="#rect"/>
-				    </clipPath>
-			 	</defs>
+			<input type="color" value="#FFFFFF" onchange="ChangeBGColor(this.parentNode.id,this.value)" style="margin:5px")><br><br>
+			<svg id="deafaultLineSVG" width="1300" height="150">
+				<rect id="deafaultLineBG" width="1300" height="150" stroke="black" stroke-width="5pt" fill="#FFFFFF" onclick="addCharacterMode(this.parentNode.id)"/>
 			</svg>
 		</div>
 	</div>
@@ -45,8 +39,8 @@
 			<text id = "ownText">
 			【全キャラ: 0 / 235 】【所有率: 0 %】
 			</text><br>
-			<svg id="selectViewSVG" width="1000" height="150">
-				<rect id="selectViewBG" width="1000" height="150" stroke="black" stroke-width="5pt" fill="#FFFFFF"/>
+			<svg id="selectViewSVG" width="1300" height="150">
+				<rect id="selectViewBG" width="1300" height="150" stroke="black" stroke-width="5pt" fill="#FFFFFF"/>
 			</svg>
 		</div>
 	</div>

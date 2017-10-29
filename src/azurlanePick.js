@@ -1,5 +1,5 @@
 var ownList = [];
-var ddList = [5,6,7,8,9,10,11,13,14,15,16,17,18,19,26,27,28,29,81,82,83,86,87,88,89,90,91,92,94,101,102,103,104,105,106,114,115,116,117,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,135,140,142,144,145,148,149,150,155,159,161,162,163,164,165,167,168,170,171,176,179,182,183,187,190,191,192,193,196,197,200,201,202,208,209,210,211,220,222,224,225,226,227,228,229,232,233,236,238,239,240,241,242,244,245,248,249,251,252,257,258,259,262,263,264,265,266,267,272,295,299,300,301,303,306];
+var ddList = [5,6,7,8,9,10,11,13,14,15,16,17,18,19,26,27,28,29,81,82,83,86,87,88,89,90,91,92,94,101,102,103,155,159,161,162,163,164,165,167,168,170,171,176,233,236,263,264,265,266,267,269,271,272,295,299,300,301,306];
 var clList = [29,30,31,32,33,34,35,36,37,104,105,106,114,115,116,117,179,182,183,187,238,239,240,241,257,258,259,262,303]
 var caList = [39,40,41,42,43,44,45,49,119,120,121,122,123,124,125,126,190,191,192,193,196,197,200,201,202,242,244,245]
 var bcList = [127,128,129,248,249]
@@ -82,8 +82,15 @@ function OwnOrNot(element)
 	} 
 	else
 	{
-		ownList[fullLink] = 0;
-		op=0.3;
+		if(addCharacterModeOn)
+		{
+			//addChara
+		}
+		else
+		{
+			ownList[fullLink] = 0;
+			op=0.3;			
+		}		
 	}	
 	d3.select(element).attr("opacity",op);
 	updateOwnText(ownList);
@@ -146,7 +153,8 @@ function LoadSelectPicture()
 			.attr("onclick","OwnOrNot(this)")
 			.attr("opacity",op);
 			x = x+width+10; 
-			if(x+width>1000)
+			var selectViewSVGWidth = d3.select("#selectViewSVG").attr("width");
+			if(x+width>selectViewSVGWidth)
 			{
 				y=y+height+10;
 				x=initX;
@@ -219,28 +227,77 @@ function clearSVGContent(svgId)
 	var svg = d3.select(idString);
 	var svgBG = d3.select(selectViewBG);
 	svg.attr("height","150")
-	   .attr("width","1000");
+	   .attr("width","1300");
 	svgBG.attr("height","150")
-	   .attr("width","1000");
+	   .attr("width","1300");
 }
-function addCharacterMode(bgId)
+var addCharacterModeOn=false;
+var addTargetSVG;//要加東西的SVG
+function addCharacterMode(svgId)
 {
-	var BGDom = document.getElementById(bgId);
-	bgId = "#"+bgId;
-	var BG = d3.select(bgId);
-	var width = BG.attr("width")*0.95;
-	var height = BG.attr("height")*0.8;
-	var x = BG.attr("width")*0.025;
-	var y = BG.attr("height")*0.1;
+	addCharacterModeOn=!addCharacterModeOn;
+	if(addCharacterModeOn)
+	{
+		var SVGDom = document.getElementById(svgId);
+		svgId = "#"+svgId;
+		addTargetSVG = d3.select(svgId);
+		var width = addTargetSVG.attr("width")*0.95;
+		var height = addTargetSVG.attr("height")*0.8;
+		var x = addTargetSVG.attr("width")*0.025;
+		var y = addTargetSVG.attr("height")*0.1;
 
-	d3.select(bgId).append("svg:rect")
-	.attr("width",width)
-	.attr("height",height)
-	.attr("x",x)
-	.attr("y",y)
-	.attr("fill","None")
-	.attr("stroke","red")
-	.attr("stroke-width","10")
-	.attr("id","selectRect");
+		d3.select(svgId).append("svg:rect")
+		.attr("width",width)
+		.attr("height",height)
+		.attr("x",x)
+		.attr("y",y)
+		.attr("fill","None")
+		.attr("stroke","red")
+		.attr("stroke-width","10")
+		.attr("id","selectRect");
+	}
+	else
+	{
+		d3.select("#selectRect").remove();
+	}
+}
+var customLine = 0;
+function addNewLine()
+{
+	console.log("addNewLine");
+	var lineView = d3.select("#lineView");
+	var lineID = "customLine"+customLine;
+	var lineDiv = lineView.append("div").attr("id",lineID);
+	customLine+=1;
+	var lineName = "第"+(customLine+1)+"艦隊"
+	lineDiv.append("text")
+		.attr("contentEditable","true")
+		.attr("style","font-size:20pt")
+		.attr("size","15")
+		.text(lineName);
+	lineDiv.append("input")
+		.attr("type","color")
+		.attr("value","#FFFFFF")
+		.attr("onchange","ChangeBGColor(this.parentNode.id,this.value)")
+		.attr("style","margin:5px");
+	lineDiv.append("button")
+		.text("削除")
+		.attr("onclick","RemoveElement(this.parentNode)")
+		.attr("style","margin:5px");
+	var lineSVGID = lineID+"SVG";
+	var lineSVG = lineDiv.append("svg")
+		.attr("id",lineSVGID) 
+		.attr("width","1300")
+		.attr("height","150");
+
+	var lineBGID = lineID+"BG";
+		lineSVG.append("svg:rect")
+		.attr("id",lineBGID) 
+		.attr("width","1300")
+		.attr("height","150")
+		.attr("stroke","black")
+		.attr("stroke-width","5pt")
+		.attr("fill","#FFFFFF")
+		.attr("onclick","addCharacterMode(this.parentNode.id)");
 }
 init();
