@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html style="background-image: url(./img/htmlBackground.jpg)">
 <head>
-	<title>AzureLane Picker</title>
-	<h1>【アズールレーン / 全キャラリスト】</h1>
+	<title>アズールレーン キャラピッカー</title>	
+	<h1 ><img src="./img/090.jpg" width="50" height="50"/>アズールレーン / 全キャラリスト</h1>
 </head>
 <link rel="stylesheet" type="text/css" href="./src/indexCSS.css">
 <body >	
@@ -20,32 +20,33 @@
 		</div>
 	</div>
 	<div id="selectView">
-		<div id="deafaultLine">
-			<h2 size="200">【全キャラ一覽(選擇區)】</h2>
-			<h3>
-			<text>【艦種別キャラ一覧:</text>
-			<select id="filterTag" onchange="LoadSelectPicture()">
-				<option value="all">全部/ALL</option>			  
-				<option value="dd">駆逐/DD</option>
-				<option value="cl">軽巡/CL</option>
-				<option value="ca">重巡/CA</option>
-				<option value="bc">巡洋戦艦/BC</option>
-				<option value="bb">戦艦/BB</option>
-				<option value="cvl">軽空母/CVL</option>
-				<option value="cv">空母/CV</option>
-				<option value="bm">重砲/BM</option>
-				<option value="ar">工作/AR</option>			  
-			</select>
-			<text>】</text>
-			<text id = "ownText">
-			【全キャラ: 0 / 165 】【所有率: 0 %】
-			</text><br>
-			</h3>
-			<svg id="selectViewSVG" width="1300" height="150">
-				<rect id="selectViewBG" width="1300" height="150" stroke="black" stroke-width="5pt" fill="#FFFFFF"/>
-			</svg>
-		</div>
-	</div>
+		<h2 size="200">【全キャラ一覽(キャラ選択)】</h2>
+		<text>【ベースカラー</text>
+		<input type="color" value="#FFFFFF" onchange="ChangeBGColor(this.parentNode.id,this.value)" style="margin:5px")>
+		<text>】</text>
+		<h3>
+		<text>【艦種別キャラ一覧:</text>
+		<select id="filterTag" onchange="LoadSelectPicture()">
+			<option value="all">全部/ALL</option>			  
+			<option value="dd">駆逐/DD</option>
+			<option value="cl">軽巡/CL</option>
+			<option value="ca">重巡/CA</option>
+			<option value="bc">巡洋戦艦/BC</option>
+			<option value="bb">戦艦/BB</option>
+			<option value="cvl">軽空母/CVL</option>
+			<option value="cv">空母/CV</option>
+			<option value="bm">重砲/BM</option>
+			<option value="ar">工作/AR</option>			  
+		</select>
+		<text>】</text>
+		<text id = "ownText">
+		【全キャラ: 0 / 165 】【所有率: 0 %】
+		</text><br>
+		</h3>
+		<svg id="selectViewSVG" width="1300" height="150">
+			<rect id="selectViewBG" width="1300" height="150" stroke="black" stroke-width="5pt" fill="#FFFFFF"/>
+		</svg>
+	</div>	
 	<img id="backImg" src="./img/background.jpg" width="1000"/>
 </body>
 

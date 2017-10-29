@@ -84,11 +84,10 @@ function OwnOrNot(element)
 	} 
 	else
 	{
-		if(addCharacterModeOn)
+		if(addCharacterModeOn)//新增角色
 		{
 			var numberOfLine = addTargetSVG.node().childNodes.length-2;
-			if(addTargetSVG.attr("id")=="deafaultLineSVG") numberOfLine-=2;
-			//addChara
+			if(addTargetSVG.attr("id")=="deafaultLineSVG") numberOfLine-=2;			
 			var x;
 			var y;
 			var picLink = d3.select(element).attr("xlink:href");
@@ -118,7 +117,7 @@ function OwnOrNot(element)
 			.attr('width', imgWidth)
 			.attr('height', imgHeight)
 			.attr("xlink:href", picLink)//"./img/001.jpg"
-			.attr("onclick","RemoveElement(this)")
+			.attr("onclick","RemoveElement(this.parentNode)")
 			.attr("opacity",op);
 		}
 		else
@@ -184,7 +183,7 @@ function LoadSelectPicture()
 			.attr('height', imgHeight)
 			.attr("xlink:href", picLink)//"./img/001.jpg"
 			.attr("border-radius",10)
-			.attr("onerror","RemoveElement(this)")
+			.attr("onerror","RemoveElement(this.parentNode)")
 			.attr("onclick","OwnOrNot(this)")
 			.attr("opacity",op);
 			x = x+imgWidth+10; 
