@@ -244,7 +244,7 @@ function saveJSONFile()
 	console.log(jsonData);
 
 	var jsonFinData = JSON.stringify(jsonData);
-	var name = "test.txt";
+	var name = "azurlane_record.txt";
 	var type = "text/plain"
     var a = document.createElement("a");
     var file = new Blob([jsonFinData], {type: type});
