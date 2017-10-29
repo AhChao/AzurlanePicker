@@ -103,9 +103,7 @@ function OwnOrNot(element)
 				y = 150/2-imgHeight/2 + (parseInt(numberOfLine/11))*(parseInt(imgHeight)+10);
 				if( numberOfLine%11==0 && numberOfLine)
 				{
-					console.log(addTargetSVG.attr("height"));
 					addTargetSVG.attr("height",parseInt(y+100)+imgHeight/2);
-					console.log(addTargetSVG.attr("height"));
 				}
 			}
 			var group = addTargetSVG.append("g");
@@ -218,7 +216,6 @@ function saveJSONFile()
 	for(var j=0; j<lineAllDiv[0].length;j++)//所有的line
 	{
 		lineID = d3.select(lineAllDiv[0][j]).attr("id");
-		console.log(lineID);
 		var linesvg = d3.select(lineAllDiv[0][j]).selectAll("svg");
 		var charInLine = d3.select(linesvg[0][0]).selectAll("g");
 		for(var i in charInLine[0])
@@ -233,7 +230,6 @@ function saveJSONFile()
 				charList.push(number);
 			}
 		}
-		console.log(charList);	
 		var lineName = "#"+lineID+"Name";
 		var lineBG = "#"+lineID+"BG";
 		jsonData[lineID]={"name":d3.select(lineName).text(),
@@ -241,7 +237,6 @@ function saveJSONFile()
 			"characters":charList};
 		charList=[];
 	}
-	console.log(jsonData);
 
 	var jsonFinData = JSON.stringify(jsonData);
 	var name = "azurlane_record.txt";
@@ -268,9 +263,7 @@ var loadJSONFile = function(event) {
         var reader = new FileReader();
         reader.onload = function(){
 	        var text = reader.result;
-	        console.log(reader.result);
 	        var oldData = JSON.parse(text);
-	        console.log(oldData);
 	        for(var key in oldData) {
 			    var item = oldData[key];
 			    if(key =="ownList") ownList = oldData[key];
@@ -307,9 +300,7 @@ var loadJSONFile = function(event) {
 							y = 150/2-imgHeight/2 + (parseInt(characterNo/11))*(parseInt(imgHeight)+10);
 							if( characterNo%11==0 && characterNo)
 							{
-								console.log(addTargetSVG.attr("height"));
 								addtoSVG.attr("height",parseInt(y+100)+imgHeight/2);
-								console.log(addTargetSVG.attr("height"));
 							}
 						}
 						var group = addtoSVG.append("g");
@@ -322,7 +313,6 @@ var loadJSONFile = function(event) {
 						.attr("onclick","RemoveElement(this.parentNode)")
 						.attr("opacity",op);
 					}
-			    	console.log("Default");
 			    } 
 			    else//新增行
 			    {
@@ -394,9 +384,7 @@ var loadJSONFile = function(event) {
 							y = 150/2-imgHeight/2 + (parseInt(characterNo/11))*(parseInt(imgHeight)+10);
 							if( characterNo%11==0 && characterNo)
 							{
-								console.log(addTargetSVG.attr("height"));
 								addtoSVG.attr("height",parseInt(y+100)+imgHeight/2);
-								console.log(addTargetSVG.attr("height"));
 							}
 						}
 						var group = addtoSVG.append("g");
@@ -410,7 +398,6 @@ var loadJSONFile = function(event) {
 						.attr("opacity",op);
 					}					
 			    }
-			    console.log(key);
 			}
 	        /*
 	        for(var i =0;i<ownList.length;i++)
