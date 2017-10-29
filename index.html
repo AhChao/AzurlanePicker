@@ -8,21 +8,21 @@
 <body >	
 	<input type="file" id="selectedFile" onchange="loadJSONFile(event)">
 	<button onclick="saveJSONFile()">バックアップ / Save</button>	
-	<button onclick="addNewLine()">新規</button>	
+	<button onclick="addNewLine()">新規</button>
 	<br><br>
 	<div id="lineView">
 		<div id="deafaultLine">
-			<text name="line1" contentEditable="true" style="font-size:20pt" size="15">第1艦隊</text>
-			<input type="color" value="#FFFFFF" onchange="ChangeBGColor(this.parentNode.id,this.value)" style="margin:5px")><br><br>
+			<text id="deafaultLineName" contentEditable="true" style="font-size:20pt" size="15">第1艦隊</text>
+			<input id = "deafaultLineBGC" type="color" value="#CD853F" onchange="ChangeBGColor(this.parentNode.id,this.value)" style="margin:5px")><br><br>
 			<svg id="deafaultLineSVG" width="1300" height="150">
-				<rect id="deafaultLineBG" width="1300" height="150" stroke="black" stroke-width="5pt" fill="#FFFFFF" onclick="addCharacterMode(this.parentNode.id)"/>
+				<rect id="deafaultLineBG" width="1300" height="150" stroke="black" stroke-width="5pt" fill="#CD853F" onclick="addCharacterMode(this.parentNode.id)"/>
 			</svg>
 		</div>
 	</div>
 	<div id="selectView">
 		<h2 size="200">【全キャラ一覽(キャラ選択)】</h2>
 		<text>【ベースカラー</text>
-		<input type="color" value="#FFFFFF" onchange="ChangeBGColor(this.parentNode.id,this.value)" style="margin:5px")>
+		<input type="color" value="#F5DEB3" onchange="ChangeBGColor(this.parentNode.id,this.value)" style="margin:5px")>
 		<text>】</text>
 		<h3>
 		<text>【艦種別キャラ一覧:</text>
@@ -44,7 +44,7 @@
 		</text><br>
 		</h3>
 		<svg id="selectViewSVG" width="1300" height="150">
-			<rect id="selectViewBG" width="1300" height="150" stroke="black" stroke-width="5pt" fill="#FFFFFF"/>
+			<rect id="selectViewBG" width="1300" height="150" stroke="black" stroke-width="5pt" fill="#F5DEB3"/>
 		</svg>
 	</div>	
 	<img id="backImg" src="./img/background.jpg" width="1000"/>

@@ -92,7 +92,6 @@ function OwnOrNot(element)
 			var y;
 			var picLink = d3.select(element).attr("xlink:href");
 
-			console.log(numberOfLine);
 			if(numberOfLine==0)
 			{
 				x = imgWidth/2;
@@ -109,7 +108,6 @@ function OwnOrNot(element)
 					console.log(addTargetSVG.attr("height"));
 				}
 			}
-			console.log(x,y);
 			var group = addTargetSVG.append("g");
 			group.append("svg:image")
 			.attr('x', x)
@@ -201,6 +199,60 @@ function LoadSelectPicture()
 		}
 	}	
 }
+function saveJSONFile()
+{	
+	var jsonData = 
+	{
+		"ownList":ownList,
+		/*"deafaultLine":
+		{
+			"name":d3.select("#deafaultLineName").text(),
+			"backgroundColor":d3.select("#deafaultLineBGC").attr("value"),
+			"characters":charList,
+		},*/
+	}
+
+	var lineAllDiv = d3.select(lineView).selectAll("div");
+	var charList = [];
+	var lineID ;
+	for(var j=0; j<lineAllDiv[0].length;j++)//所有的line
+	{
+		lineID = d3.select(lineAllDiv[0][j]).attr("id");
+		console.log(lineID);
+		var linesvg = d3.select(lineAllDiv[0][j]).selectAll("svg");
+		var charInLine = d3.select(linesvg[0][0]).selectAll("g");
+		for(var i in charInLine[0])
+		{
+			if(charInLine[0][i].tagName=="g")
+			{
+				var image = d3.select(charInLine[0][i]).selectAll("image");
+				var number = d3.select(image[0][0]).attr("xlink:href");
+				number = number.slice(6);
+				number = number.slice(0,3)
+				number = parseInt(number);
+				charList.push(number);
+			}
+		}
+		console.log(charList);	
+		var lineName = "#"+lineID+"Name";
+		var lineBG = "#"+lineID+"BG";
+		jsonData[lineID]={"name":d3.select(lineName).text(),
+			"backgroundColor":d3.select(lineBG).attr("fill"),
+			"characters":charList};
+		charList=[];
+	}
+	console.log(jsonData);
+
+	var jsonFinData = JSON.stringify(jsonData);
+	var name = "test.txt";
+	var type = "text/plain"
+    var a = document.createElement("a");
+    var file = new Blob([jsonFinData], {type: type});
+    a.href = URL.createObjectURL(file);
+    a.download = name;
+    a.click();
+}
+/*//舊的
 function saveJSONFile() {
 	var jsonData = JSON.stringify(ownList);
 	var name = "test.txt";
@@ -210,18 +262,161 @@ function saveJSONFile() {
     a.href = URL.createObjectURL(file);
     a.download = name;
     a.click();
-}
+}*/
 var loadJSONFile = function(event) {
         var input = event.target;
         var reader = new FileReader();
         reader.onload = function(){
 	        var text = reader.result;
 	        console.log(reader.result);
-	        var oldOwnList = JSON.parse(text);
+	        var oldData = JSON.parse(text);
+	        console.log(oldData);
+	        for(var key in oldData) {
+			    var item = oldData[key];
+			    if(key =="ownList") ownList = oldData[key];
+			    else if(key=="deafaultLine")//讀取資料到預設行
+			    {
+			    	d3.select("#deafaultLineBGC").node().value=oldData[key]["backgroundColor"];
+			    	d3.select("#deafaultLineBG").attr("fill",oldData[key]["backgroundColor"]);
+			    	d3.select("#deafaultLineName").text(oldData[key]["name"]);
+			    	//匯入角色
+					var oldcharacterList = oldData[key]["characters"];
+					var addtoSVG = d3.select("#deafaultLineSVG");
+			    	for(var characterNo=0;characterNo<oldcharacterList.length;characterNo++)
+					{
+						var x;
+						var y;						
+						var number = oldcharacterList[characterNo];
+						var picLink = 	"./img/";
+
+						if( number<10 )	number="00"+number;
+						else if( number<100) number = "0"+number;
+						picLink=picLink+number+".jpg";
+						var op;
+						if( ownList[parseInt(number)]>0) op=1;
+						else op=0.3;
+
+						if(characterNo==0)
+						{
+							x = imgWidth/2;
+							y = 150/2-imgHeight/2;
+						}
+						else
+						{
+							x = imgWidth/2 + (characterNo%11)*(parseInt(imgWidth)+10);
+							y = 150/2-imgHeight/2 + (parseInt(characterNo/11))*(parseInt(imgHeight)+10);
+							if( characterNo%11==0 && characterNo)
+							{
+								console.log(addTargetSVG.attr("height"));
+								addtoSVG.attr("height",parseInt(y+100)+imgHeight/2);
+								console.log(addTargetSVG.attr("height"));
+							}
+						}
+						var group = addtoSVG.append("g");
+						group.append("svg:image")
+						.attr('x', x)
+						.attr('y', y)
+						.attr('width', imgWidth)
+						.attr('height', imgHeight)
+						.attr("xlink:href", picLink)//"./img/001.jpg"
+						.attr("onclick","RemoveElement(this.parentNode)")
+						.attr("opacity",op);
+					}
+			    	console.log("Default");
+			    } 
+			    else//新增行
+			    {
+			    	//創建行
+			    	var lineView = d3.select("#lineView");
+					var lineID = key;
+					var lineIDName = lineID+"Name";
+					var lineBGC = lineID+"BGC"
+					var lineDiv = lineView.append("div").attr("id",lineID);
+					customLine+=1;
+					var lineName = oldData[key]["name"];
+					lineDiv.append("text")
+						.attr("contentEditable","true")
+						.attr("style","font-size:20pt")
+						.attr("size","15")
+						.attr("id",lineIDName)
+						.text(lineName);
+					lineDiv.append("input")
+						.attr("type","color")
+						.attr("value",oldData[key]["backgroundColor"])
+						.attr("id",lineBGC)
+						.attr("onchange","ChangeBGColor(this.parentNode.id,this.value)")
+						.attr("style","margin:5px");
+					lineDiv.append("button")
+						.text("削除")
+						.attr("onclick","RemoveElement(this.parentNode)")
+						.attr("style","margin:5px");
+					lineDiv.append("br")
+					var lineSVGID = lineID+"SVG";
+					var lineSVG = lineDiv.append("svg")
+						.attr("id",lineSVGID) 
+						.attr("width","1300")
+						.attr("height","150");
+
+					var lineBGID = lineID+"BG";
+						lineSVG.append("svg:rect")
+						.attr("id",lineBGID) 
+						.attr("width","1300")
+						.attr("height","150")
+						.attr("stroke","black")
+						.attr("stroke-width","5pt")
+						.attr("fill",oldData[key]["backgroundColor"])
+						.attr("onclick","addCharacterMode(this.parentNode.id)");
+					//匯入角色
+					var oldcharacterList = oldData[key]["characters"];
+					var addtoSVG = d3.select("#"+lineSVGID);
+					for(var characterNo=0;characterNo<oldcharacterList.length;characterNo++)
+					{
+						var x;
+						var y;						
+						var number = oldcharacterList[characterNo];
+						var picLink = 	"./img/";
+
+						if( number<10 )	number="00"+number;
+						else if( number<100) number = "0"+number;
+						picLink=picLink+number+".jpg";
+						var op;
+						if( ownList[parseInt(number)]>0) op=1;
+						else op=0.3;
+
+						if(characterNo==0)
+						{
+							x = imgWidth/2;
+							y = 150/2-imgHeight/2;
+						}
+						else
+						{
+							x = imgWidth/2 + (characterNo%11)*(parseInt(imgWidth)+10);
+							y = 150/2-imgHeight/2 + (parseInt(characterNo/11))*(parseInt(imgHeight)+10);
+							if( characterNo%11==0 && characterNo)
+							{
+								console.log(addTargetSVG.attr("height"));
+								addtoSVG.attr("height",parseInt(y+100)+imgHeight/2);
+								console.log(addTargetSVG.attr("height"));
+							}
+						}
+						var group = addtoSVG.append("g");
+						group.append("svg:image")
+						.attr('x', x)
+						.attr('y', y)
+						.attr('width', imgWidth)
+						.attr('height', imgHeight)
+						.attr("xlink:href", picLink)//"./img/001.jpg"
+						.attr("onclick","RemoveElement(this.parentNode)")
+						.attr("opacity",op);
+					}					
+			    }
+			    console.log(key);
+			}
+	        /*
 	        for(var i =0;i<ownList.length;i++)
 	        {
-	        	ownList[i]=oldOwnList[i];
-	        }
+	        	ownList[i]=oldData[i];
+	        }*/
 	        //刷新當前畫面選單
 	        updateOwnText(ownList);
 	        LoadSelectPicture();
@@ -242,7 +437,7 @@ function updateOwnText( targetList )
 	if( parseInt(own)==0) ownPercent=0;
 	else ownPercent= own/total*100;
 	ownPercent = ownPercent.toFixed(2);
-	ownText.innerText="【持有數: " +own +" / "+ total +"】【持有率: "+ ownPercent + " %】"
+	ownText.innerText="【全キャラ: " +own +" / "+ total +"】【所有率: "+ ownPercent + " %】"
 }
 
 function clearSVGContent(svgId)
@@ -313,9 +508,10 @@ function addCharacterMode(svgId)
 var customLine = 0;
 function addNewLine()
 {
-	console.log("addNewLine");
 	var lineView = d3.select("#lineView");
 	var lineID = "customLine"+customLine;
+	var lineIDName = lineID+"Name";
+	var lineBGC = lineID+"BGC"
 	var lineDiv = lineView.append("div").attr("id",lineID);
 	customLine+=1;
 	var lineName = "第"+(customLine+1)+"艦隊"
@@ -323,10 +519,12 @@ function addNewLine()
 		.attr("contentEditable","true")
 		.attr("style","font-size:20pt")
 		.attr("size","15")
+		.attr("id",lineIDName)
 		.text(lineName);
 	lineDiv.append("input")
 		.attr("type","color")
 		.attr("value","#FFFFFF")
+		.attr("id",lineBGC)
 		.attr("onchange","ChangeBGColor(this.parentNode.id,this.value)")
 		.attr("style","margin:5px");
 	lineDiv.append("button")
