@@ -9,6 +9,8 @@ var cvList = [73,74,76,77,78,144,145,148,224,225,226,227,228,229,252]
 var bmList = [149,150]
 var arList = [80,232]
 var allList = ddList.concat(clList,caList,bcList,bbList,cvlList,cvList,bmList,arList);
+var imgWidth = 100;
+var imgHeight = 100;
 
 function init()
 {
@@ -29,24 +31,24 @@ function ChangeBGColor(line,color)
 	var bgId = "#"+line+"BG";
 	var bg = d3.select(bgId).attr("fill",color);
 	
+	/*
+	//一開始寫來測試新增用
 	var svgId = "#"+line+"SVG";
 	var svg = d3.select(svgId);
 	var group = svg.append("g");
 
-	var width = 100;
-	var height = 100;
-	var x = width/2;
-	var y = 150/2-height/2;//height/2 - imgHeight/2
+	var x = imgWidth/2;
+	var y = 150/2-imgHeight/2;//height/2 - imgHeight/2
 
 	group.attr("onclick","RemoveElement(this)");
 	group.append("svg:image")
 	.attr('x', x)
 	.attr('y', y)
-	.attr('width', width)
-	.attr('height', height)
+	.attr('width', imgWidth)
+	.attr('height', imgHeight)
 	.attr("xlink:href", "./img/001.jpg")
 	.attr("border-radius",10)
-	.attr("clip-path","url(#clip)");
+	.attr("clip-path","url(#clip)");*/
 	/*
 	//顯示等級用
 	group.append("svg:rect")
@@ -84,7 +86,40 @@ function OwnOrNot(element)
 	{
 		if(addCharacterModeOn)
 		{
+			var numberOfLine = addTargetSVG.node().childNodes.length-2;
+			if(addTargetSVG.attr("id")=="deafaultLineSVG") numberOfLine-=2;
 			//addChara
+			var x;
+			var y;
+			var picLink = d3.select(element).attr("xlink:href");
+
+			console.log(numberOfLine);
+			if(numberOfLine==0)
+			{
+				x = imgWidth/2;
+				y = 150/2-imgHeight/2;
+			}
+			else
+			{
+				x = imgWidth/2 + (numberOfLine%11)*(parseInt(imgWidth)+10);
+				y = 150/2-imgHeight/2 + (parseInt(numberOfLine/11))*(parseInt(imgHeight)+10);
+				if( numberOfLine%11==0 && numberOfLine)
+				{
+					console.log(addTargetSVG.attr("height"));
+					addTargetSVG.attr("height",parseInt(y+100)+imgHeight/2);
+					console.log(addTargetSVG.attr("height"));
+				}
+			}
+			console.log(x,y);
+			var group = addTargetSVG.append("g");
+			group.append("svg:image")
+			.attr('x', x)
+			.attr('y', y)
+			.attr('width', imgWidth)
+			.attr('height', imgHeight)
+			.attr("xlink:href", picLink)//"./img/001.jpg"
+			.attr("onclick","RemoveElement(this)")
+			.attr("opacity",op);
 		}
 		else
 		{
@@ -103,10 +138,10 @@ function LoadSelectPicture()
 	var background = d3.select("#selectViewBG");
 	var svgHeight = d3.select(svgId).attr("height");
 
-	var width = 100;
-	var height = 100;
-	var initX = width/2;
-	var initY = 150/2-height/2;//height/2 - imgHeight/2
+	var imgWidth = 100;
+	var imgHeight = 100;
+	var initX = imgWidth/2;
+	var initY = 150/2-imgHeight/2;//height/2 - imgHeight/2
 	var x = initX;
 	var y = initY;
 	
@@ -145,21 +180,21 @@ function LoadSelectPicture()
 			group.append("svg:image")
 			.attr('x', x)
 			.attr('y', y)
-			.attr('width', width)
-			.attr('height', height)
+			.attr('width', imgWidth)
+			.attr('height', imgHeight)
 			.attr("xlink:href", picLink)//"./img/001.jpg"
 			.attr("border-radius",10)
 			.attr("onerror","RemoveElement(this)")
 			.attr("onclick","OwnOrNot(this)")
 			.attr("opacity",op);
-			x = x+width+10; 
+			x = x+imgWidth+10; 
 			var selectViewSVGWidth = d3.select("#selectViewSVG").attr("width");
-			if(x+width>selectViewSVGWidth)
+			if(x+imgWidth>selectViewSVGWidth)
 			{
-				y=y+height+10;
+				y=y+imgHeight+10;
 				x=initX;
 				svgHeight = d3.select(svgId).attr("height");
-				var tempSVGHeight = parseInt(svgHeight) + parseInt(height) + 10;
+				var tempSVGHeight = parseInt(svgHeight) + parseInt(imgHeight) + 10;
 				svg.attr("height",tempSVGHeight);
 				background.attr("height",tempSVGHeight);
 			}
@@ -235,7 +270,22 @@ var addCharacterModeOn=false;
 var addTargetSVG;//要加東西的SVG
 function addCharacterMode(svgId)
 {
-	addCharacterModeOn=!addCharacterModeOn;
+	if(document.getElementById("selectRect"))
+	{
+		if(svgId==document.getElementById("selectRect").parentNode.id)
+		{
+			addCharacterModeOn=!addCharacterModeOn;			
+		}
+		else
+		{
+			d3.select("#selectRect").remove();
+		}
+	}
+	else
+	{
+		addCharacterModeOn=!addCharacterModeOn;
+	}
+	
 	if(addCharacterModeOn)
 	{
 		var SVGDom = document.getElementById(svgId);
@@ -284,6 +334,7 @@ function addNewLine()
 		.text("削除")
 		.attr("onclick","RemoveElement(this.parentNode)")
 		.attr("style","margin:5px");
+	lineDiv.append("br")
 	var lineSVGID = lineID+"SVG";
 	var lineSVG = lineDiv.append("svg")
 		.attr("id",lineSVGID) 
